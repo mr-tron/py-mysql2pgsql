@@ -27,12 +27,14 @@ class Mysql2Pgsql(object):
             writer = PostgresFileWriter(self._get_file(self.file_options['destination']['file']), 
                                         self.run_options.verbose, 
                                         tz=self.file_options.get('timezone', False),
-                                        index_prefix=self.file_options.get("index_prefix", ''))
+                                        index_prefix=self.file_options.get("index_prefix", ''),
+                                        uuid_workaround=self.file_options.get('uuid_workaround', False))
         else:
             writer = PostgresDbWriter(self.file_options['destination']['postgres'], 
                                       self.run_options.verbose, 
                                       tz=self.file_options.get('timezone', False),
-                                      index_prefix=self.file_options.get("index_prefix", ''))
+                                      index_prefix=self.file_options.get("index_prefix", ''),
+                                      uuid_workaround=self.file_options.get('uuid_workaround',False))
 
         Converter(reader, writer, self.file_options, self.run_options.verbose).convert()
 

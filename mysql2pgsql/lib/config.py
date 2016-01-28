@@ -84,4 +84,7 @@ timezone: false
 # if index_prefix is given, indexes will be created whith a name prefixed with index_prefix
 index_prefix:
 
+uuid_workaround: false
+
+
 """

@@ -12,9 +12,10 @@ class PostgresWriter(object):
     """Base class for :py:class:`mysql2pgsql.lib.postgres_file_writer.PostgresFileWriter`
     and :py:class:`mysql2pgsql.lib.postgres_db_writer.PostgresDbWriter`.
     """
-    def __init__(self, tz=False, index_prefix=''):
+    def __init__(self, tz=False, index_prefix='', uuid_workaround=False):
         self.column_types = {}
         self.index_prefix = index_prefix
+        self.uuid_workaround = uuid_workaround
         if tz:
             self.tz = timezone('UTC')
             self.tz_offset = '+00:00'
@@ -45,7 +46,10 @@ class PostgresWriter(object):
 
             if column['type'] == 'char':
                 default = ('%s::char' % default) if t(default) else None
-                return default, 'character(%s)' % column['length']
+                if column['length'] and self.uuid_workaround == 32:
+                    return None, 'uuid'
+                else:
+                    return default, 'character(%s)' % column['length']
             elif column['type'] == 'varchar':
                 default = ('%s::character varying' % default) if t(default) else None
                 return default, 'character varying(%s)' % column['length']
