@@ -46,7 +46,7 @@ class PostgresWriter(object):
 
             if column['type'] == 'char':
                 default = ('%s::char' % default) if t(default) else None
-                if column['length'] and self.uuid_workaround == 32:
+                if column['length'] == 32 and self.uuid_workaround:
                     return None, 'uuid'
                 else:
                     return default, 'character(%s)' % column['length']
